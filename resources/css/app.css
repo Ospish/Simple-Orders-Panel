@@ -4,6 +4,7 @@
 
 /* Стили используемые в JS и не загружаемые Tailwind */
 #content .product_card {
+    position: relative;
     border-radius: 25px;
     border-width: 1px;
     border-color: #999a9e;
@@ -23,6 +24,7 @@
 }
 
 #content .order_card {
+    position: relative;
     border-radius: 25px;
     border-width: 1px;
     border-color: #999a9e;
@@ -33,6 +35,23 @@
 
 .invalid {
     border: 1px solid #dc2b2b;
+}
+
+.btn_remove {
+    rotate: 45deg;
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    cursor: pointer;
+    right: 15px;
+}
+
+.order_card .btn_remove {
+    top: 15px;
+}
+
+.product_card .btn_remove {
+    bottom: 15px;
 }
 
 input::-webkit-outer-spin-button,

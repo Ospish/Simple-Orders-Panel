@@ -20,8 +20,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/orders', [OrderController::class, 'get'])->name('orders.get');
     Route::post('/orders/add', [OrderController::class, 'add'])->name('orders.add');
+    Route::post('/orders/remove', [OrderController::class, 'remove'])->name('orders.remove');
     Route::get('/products', [ProductController::class, 'get'])->middleware(['auth'])->name('products.get');
     Route::post('/products/add', [ProductController::class, 'add'])->name('products.add');
+    Route::post('/products/remove', [ProductController::class, 'remove'])->name('products.remove');
 });
 
 require __DIR__.'/auth.php';

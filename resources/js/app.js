@@ -1,7 +1,6 @@
 import './bootstrap';
 
 import Alpine from 'alpinejs'
-import {dispatch} from "alpinejs/src/utils/dispatch.js";
 
 window.Alpine = Alpine
 
@@ -16,12 +15,13 @@ export default class core {
         const ordersBtn = document.querySelector('#orders')
 
         // Init buttons
-        productsBtn.addEventListener('click', function (e) { core.refreshProducts() })
-        ordersBtn.addEventListener('click', function (e) { core.refreshOrders() })
+        productsBtn.addEventListener('click', function () { core.refreshProducts() })
+        ordersBtn.addEventListener('click', function () { core.refreshOrders() })
 
         const addItemName = document.querySelector('#add_item_name')
         const addItemPrice = document.querySelector('#add_item_price')
         const addItemBtn = document.querySelector('#add_item_btn')
+
 
         // Simple frontend validation function
         window.validateInputs = (elem) => {
@@ -38,7 +38,7 @@ export default class core {
             return isValid
         }
 
-        addItemBtn.addEventListener('click', function (e) {
+        addItemBtn.addEventListener('click', function () {
             if (window.validateInputs([addItemName, addItemPrice])) {
                 let body = {
                     'name': addItemName.value,
@@ -51,8 +51,7 @@ export default class core {
             }
         })
 
-
-        document.querySelector('#new_order').addEventListener('click', function (e) {
+        document.querySelector('#new_order').addEventListener('click', function () {
             //if (window.validateInputs([addItemName, addItemPrice])) {
                 let body = {
                 }
@@ -115,32 +114,58 @@ export default class core {
             core.contentHeader.innerHTML = 'Заказы:'
             let output = ''
             response.forEach(function (elem) {
-                output += '<div class="order_card">' +
+                output += '<div data-id="'+elem.id+'" class="order_card">' +
                     '<div class="font-bold">Заказ №'+elem.id+'</div>' +
                     '<div>Пользователь: '+elem.user_name+'</div>' +
-                    '<div>Статус: '+elem.status_text+'</div></div>'
+                    '<div>Статус: '+elem.status_text+'</div>' +
+                    '<svg class="btn_remove" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="m12.75 5c0-.41421-.3358-.75-.75-.75s-.75.33579-.75.75v6.25h-6.25c-.41421 0-.75.3358-.75.75s.33579.75.75.75h6.25v6.25c0 .4142.3358.75.75.75s.75-.3358.75-.75v-6.25h6.25c.4142 0 .75-.3358.75-.75s-.3358-.75-.75-.75h-6.25z" fill="#000000" fill-rule="evenodd"/></svg>' +
+                    '</div>'
             })
             core.refreshPanel('orders')
+            core.contentBody.dataset.page = 'orders'
             core.contentBody.innerHTML = output;
+            core.initRemoveBtns()
         })
     }
 
     static refreshProducts() {
-
         core.sendGet('/products').then(response => {
             core.contentHeader.innerHTML = 'Продукты:'
             let output = ''
             response.forEach(function (elem) {
-                output += '<div class="product_card">' +
-                    '<img src="https://placehold.co/240x240">' +
+                output += '<div data-id="'+elem.id+'" class="product_card">' +
+                    '<img alt="Image picture" src="https://placehold.co/240x240">' +
                     '<div class="product_card__info">' +
                         '<div>'+elem.name+'</div>' +
                         '<div>'+elem.price+' ₽</div>' +
-                    '</div></div>'
+                    '</div>' +
+                    '<svg class="btn_remove" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="m12.75 5c0-.41421-.3358-.75-.75-.75s-.75.33579-.75.75v6.25h-6.25c-.41421 0-.75.3358-.75.75s.33579.75.75.75h6.25v6.25c0 .4142.3358.75.75.75s.75-.3358.75-.75v-6.25h6.25c.4142 0 .75-.3358.75-.75s-.3358-.75-.75-.75h-6.25z" fill="#000000" fill-rule="evenodd"/></svg>' +
+                    '</div>'
             })
             core.refreshPanel('products')
-
+            core.contentBody.dataset.page = 'products'
             core.contentBody.innerHTML = output;
+            core.initRemoveBtns()
+        })
+    }
+
+    static initRemoveBtns() {
+        const removeBtns = document.querySelectorAll('.btn_remove')
+        const curPage = core.contentBody.dataset.page
+        removeBtns.forEach(function (elem) {
+            elem.addEventListener('click', function () {
+                //if (window.validateInputs([addItemName, addItemPrice])) {
+                let body = {
+                    id: elem.closest('.'+curPage.slice(0, -1)+'_card').dataset.id
+                }
+                console.log(body)
+                core.sendPost('/'+core.contentBody.dataset.page+'/remove', body).then(response => {
+                    if (curPage === 'orders') core.refreshOrders()
+                    if (curPage === 'products') core.refreshProducts()
+                    console.log(response)
+                })
+                //}
+            })
         })
     }
 }

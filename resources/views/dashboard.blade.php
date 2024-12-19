@@ -17,7 +17,7 @@
                 <div id="content" class="p-6 text-gray-900 dark:text-gray-100">
                     <div id="content__header" class="font-bold text-2xl mb-3"></div>
                     <div id="content__body" class="grid gap-6 grid-cols-3">
-                        {{ __("You're logged in!") }}
+                        {{ __("Вход выполнен успешно") }}
                     </div>
                 </div>
 

@@ -20,4 +20,11 @@ class ProductController extends Controller
         $product = Product::create(['name' => $content->name, 'price' => $content->price]);
         return response()->json($product);
     }
+
+    function remove(Request $request)
+    {
+        $content = json_decode($request->getContent());
+        $result = Product::where('id', $content->id)->delete();
+        return response()->json($result);
+    }
 }

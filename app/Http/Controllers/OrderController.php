@@ -29,4 +29,11 @@ class OrderController extends Controller
         //$order = Order::create(['name' => $content->name, 'price' => $content->price]);
         return response()->json();
     }
+
+    function remove(Request $request)
+    {
+        $content = json_decode($request->getContent());
+        $result = Order::where('id', $content->id)->delete();
+        return response()->json($result);
+    }
 }
