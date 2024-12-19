@@ -58,4 +58,9 @@ class Order extends Model
     {
         return $this->user()->get()[0]->name;
     }
+
+    public function getItemCount()
+    {
+        return $this->orderItems()->sum('quantity');
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -21,4 +22,11 @@ class OrderController extends Controller
         return response()->json($orders);
     }
 
+    function add(Request $request)
+    {
+        $content = json_decode($request->getContent());
+        Order::factory(1)->has(OrderItem::factory(rand(1,3)))->create(['status' => rand(1,3)]);
+        //$order = Order::create(['name' => $content->name, 'price' => $content->price]);
+        return response()->json();
+    }
 }

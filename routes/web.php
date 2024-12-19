@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/orders', [OrderController::class, 'get'])->name('orders.get');
+    Route::post('/orders/add', [OrderController::class, 'add'])->name('orders.add');
     Route::get('/products', [ProductController::class, 'get'])->middleware(['auth'])->name('products.get');
     Route::post('/products/add', [ProductController::class, 'add'])->name('products.add');
 });

@@ -16,14 +16,30 @@ export default class core {
         const ordersBtn = document.querySelector('#orders')
 
         // Init buttons
-        productsBtn.addEventListener('click', function () { core.refreshProducts() })
+        productsBtn.addEventListener('click', function (e) { core.refreshProducts() })
         ordersBtn.addEventListener('click', function (e) { core.refreshOrders() })
 
         const addItemName = document.querySelector('#add_item_name')
         const addItemPrice = document.querySelector('#add_item_price')
         const addItemBtn = document.querySelector('#add_item_btn')
+
+        // Simple frontend validation function
+        window.validateInputs = (elem) => {
+            if (!Array.isArray(elem)) elem = [elem]
+            let isValid = true
+
+            elem.forEach((e) => {
+                if (e.type === 'text' && e.value === '' || e.type === 'number' && e.value < 0.01) {
+                    isValid = false
+                    e.classList.add('invalid')
+                }
+            })
+
+            return isValid
+        }
+
         addItemBtn.addEventListener('click', function (e) {
-            if (addItemName.value.length !== '' && addItemPrice.value !== '') {
+            if (window.validateInputs([addItemName, addItemPrice])) {
                 let body = {
                     'name': addItemName.value,
                     'price': addItemPrice.value
@@ -33,11 +49,18 @@ export default class core {
                     console.log(response)
                 })
             }
-            else {
-                e.preventDefault()
-                if (addItemName.value.length === '') addItemName.classList.add('invalid')
-                if (addItemPrice.value !== '') addItemPrice.classList.add('invalid')
-            }
+        })
+
+
+        document.querySelector('#new_order').addEventListener('click', function (e) {
+            //if (window.validateInputs([addItemName, addItemPrice])) {
+                let body = {
+                }
+                core.sendPost('/orders/add', body).then(response => {
+                    core.refreshOrders()
+                    console.log(response)
+                })
+            //}
         })
     }
 
